@@ -1,0 +1,23 @@
+{
+  "name": "brainado",
+  "version": "0.0.0",
+  "description": "A word association brainstorming app",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.13.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dougshamoo/brainado.git"
+  },
+  "author": "Doug Shamoo <doug.shamoo@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dougshamoo/brainado/issues"
+  },
+  "homepage": "https://github.com/dougshamoo/brainado#readme"
+}
