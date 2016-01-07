@@ -4,7 +4,7 @@
   "description": "A word association brainstorming app",
   "main": "index.js",
   "engines": {
-    "node": "5.2.0",
+    "node": "5.2.0"
   },
   "dependencies": {
     "express": "^4.13.3",
