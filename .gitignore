@@ -28,3 +28,6 @@ node_modules
 
 # Compiled webpack files
 public/bundle.js
+
+# Config files
+server/config.js
