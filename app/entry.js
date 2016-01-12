@@ -2,7 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var request = require('superagent');
 
-
+// TODO: remove test data
 var TEST_DATA = {
   nodes: [
     {
@@ -69,16 +69,16 @@ var WordInput = React.createClass({
 var WordList = React.createClass({
   getInitialState: function() {
     return {
-      words: this.props.words,
+      associatedWords: this.props.associatedWords,
     }
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState({
-      words: nextProps.words,
+      associatedWords: nextProps.associatedWords,
     });
   },
   renderWords: function() {
-    return this.state.words.map(function(word) {
+    return this.state.associatedWords.map(function(word) {
       return (
         <li key={word}>{word}</li>
       );
@@ -98,7 +98,7 @@ var WordList = React.createClass({
 var color = d3.scale.category20();
 
 var Node = React.createClass({
-  render: function () {
+  render: function() {
     return (
       <circle
         r={5}
@@ -114,7 +114,7 @@ var Node = React.createClass({
 });
 
 var Link = React.createClass({
-  render: function () {
+  render: function() {
     return (
       <line
         x1={this.props.datum.source.x}
@@ -151,20 +151,30 @@ var Graph = React.createClass({
       links: null
     };
   },
-  componentDidMount: function () {
+  componentDidMount: function() {
     var self = this;
     // refactor entire graph into sub component - force layout shouldn't be
     // manipulating props, though this works
     this.state.force
-              .nodes(this.props.wordData.nodes)
-              .links(this.props.wordData.links)
+              .nodes(this.props.graphData.nodes)
+              .links(this.props.graphData.links)
               .start();
     this.state.force.on("tick", function (tick, b, c) {
       self.forceUpdate();
     });
   },
-  drawLinks: function () {
-    var links = this.props.wordData.links.map(function (link, index) {
+  componentWillReceiveProps: function(nextProps) {
+    var self = this;
+    this.state.force
+              .nodes(nextProps.graphData.nodes)
+              .links(nextProps.graphData.links)
+              .start();
+    this.state.force.on("tick", function (tick, b, c) {
+      self.forceUpdate();
+    });
+  },
+  drawLinks: function() {
+    var links = this.props.graphData.links.map(function (link, index) {
       return (<Link datum={link} key={index} />)
     });
     return (
@@ -173,8 +183,8 @@ var Graph = React.createClass({
       </g>
     );
   },
-  drawNodes: function () {
-    var nodes = this.props.wordData.nodes.map(function (node, index) {
+  drawNodes: function() {
+    var nodes = this.props.graphData.nodes.map(function (node, index) {
       return (
         <Node 
           key={index}
@@ -205,14 +215,15 @@ var Graph = React.createClass({
 var App = React.createClass({
   getInitialState: function() {
     return {
-      words: [],
-      wordData: this.props.wordData,
+      associatedWords: [],
+      graphData: TEST_DATA,
     }
   },
   submitWord: function (word) {
     // post word to server
-    console.log('post ' + word + ' to server');
+    console.log('post ' + word + ' to server...');
     var self = this;
+
     request
       .post('/word')
       .send({word: word})
@@ -220,8 +231,34 @@ var App = React.createClass({
         if (err || !data.ok){
           console.log('post request for ' + word + ' failed');
         } else {
-          console.log('post request successful: ' + data.body.associations_array);
-          self.setState({words: data.body.associations_array});
+          console.log('post request successful: ' + JSON.stringify(data.body));
+          var associatedWords = data.body.associations_array;
+          var associatedScores = data.body.associations_scored;
+          
+          // init new graph data object with source word
+          var vizData = {nodes:[{name: word, group: 0}], links:[]};
+
+          // create a node and a link to source word for each associated word
+          for (var i = 0; i < associatedWords.length; i++) {
+            var node = {
+              name: associatedWords[i],
+              group: i + 1,
+            };
+            var link = {
+              source: 0,
+              target: i + 1,
+              score: associatedScores[associatedWords[i]] * 300,
+            };
+
+            vizData.nodes.push(node);
+            vizData.links.push(link);
+            // console.log('NODE:', node, 'LINK:', link);
+          }
+
+          self.setState({
+            associatedWords: associatedWords,
+            graphData: vizData,
+          });
         }
       });
   },
@@ -231,12 +268,11 @@ var App = React.createClass({
         <WordInput
           submitWord={this.submitWord}/>
         <WordList 
-          words={this.state.words}/>
-        <Graph wordData={this.state.wordData}/>
+          associatedWords={this.state.associatedWords}/>
+        <Graph graphData={this.state.graphData}/>
       </div>
     );
   },
 });
 
-
-ReactDOM.render(<App wordData={TEST_DATA}/>, document.getElementById('app'));
+ReactDOM.render(<App/>, document.getElementById('app'));
