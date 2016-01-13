@@ -128,7 +128,19 @@ var Link = React.createClass({
         }}/>
     );
   }
-})
+});
+
+var NodeLabel = React.createClass({
+  render: function() {
+    return (
+      <text
+        x={this.props.x}
+        y={this.props.y}>
+        {this.props.text}
+      </text>
+    );
+  }
+});
 
 var Graph = React.createClass({ 
   // mixins: [Radium.StyleResolverMixin, Radium.BrowserStateMixin],
@@ -195,6 +207,18 @@ var Graph = React.createClass({
     });
     return nodes;
   },
+  drawLabels: function() {
+    var labels = this.props.graphData.nodes.map(function(node, index) {
+      return (
+        <NodeLabel
+          key={index}
+          x={node.x + 10}
+          y={node.y - 10}
+          text={node.name}/>
+      );
+    });
+    return labels;
+  },
   render: function() {
     return (
       <div>
@@ -206,6 +230,7 @@ var Graph = React.createClass({
           height={this.state.svgHeight}>
           {this.drawLinks()}
           {this.drawNodes()}
+          {this.drawLabels()}
         </svg>
       </div>
     );
