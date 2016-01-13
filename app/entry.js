@@ -21,6 +21,10 @@ var TEST_DATA = {
       name: 'hound',
       group: 4,
     },
+    {
+      name: 'canine',
+      group: 5,
+    },
   ],
   links: [
     {
@@ -37,6 +41,11 @@ var TEST_DATA = {
       source: 0,
       target: 3,
       score: 150,
+    },
+    {
+      source: 0,
+      target: 4,
+      score: 200,
     },
   ]
 };
@@ -241,8 +250,13 @@ var App = React.createClass({
   getInitialState: function() {
     return {
       associatedWords: [],
-      graphData: TEST_DATA,
+      graphData: {nodes: [], links:[]},
     }
+  },
+  componentDidMount: function() {
+    this.setState({
+      graphData: TEST_DATA,
+    });
   },
   submitWord: function (word) {
     // post word to server
