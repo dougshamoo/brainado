@@ -1,14 +1,15 @@
 module.exports = {
   entry: './app/entry.js',
   output: {
+    path: __dirname,
     filename: 'public/bundle.js',
   },
   module: {
     loaders: [
-      // {
-      //   test: /\.css$/,
-      //   loader:'style!css'
-      // },
+      {
+        test: /\.css$/,
+        loader:'style!css'
+      },
       { 
         test: /\.js$/,
         loader:'babel',
@@ -18,9 +19,18 @@ module.exports = {
         }
       },
       // {
+      //   test: /\.json$/,
+      //   loader: 'json-loader'
+      // },
+      // {
       //   test: /\.less$/,
       //   loader: "style!css!less"
       // }
     ]
-  }
+  },
+  // node: {
+  //   fs: 'empty',
+  //   tls: 'empty',
+  //   net: 'empty',
+  // },
 };
