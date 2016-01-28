@@ -18,13 +18,21 @@ var WordList = React.createClass({
     });
   },
 
+  handleClick: function(word) {
+    // TODO: pass new word up to App state
+    console.log(word);
+    this.props.submitWord(word);
+  },
+
   renderWords: function() {
+    var self = this;
     return this.state.associatedWords.map(function(word) {
       return (
         <RaisedButton
-          id={word}
+          key={word}
           label={word}
-          style={style} />
+          style={style}
+          onClick={self.handleClick.bind(null, word)} />
       );
     });
   },

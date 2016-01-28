@@ -22,6 +22,7 @@ var {
 var App = React.createClass({
   getInitialState: function() {
     return {
+      sourceWord: '',
       associatedWords: [],
       graphData: {nodes: [], links:[]},
     };
@@ -69,6 +70,7 @@ var App = React.createClass({
           }
 
           self.setState({
+            sourceWord: word,
             associatedWords: associatedWords,
             graphData: vizData,
           });
@@ -83,9 +85,11 @@ var App = React.createClass({
         title="Brainado"
         iconClassNameRight="muidocs-icon-navigation-expand-more"/>
         <WordInput
-          submitWord={this.submitWord}/>
+          submitWord={this.submitWord}
+          sourceWord={this.state.sourceWord}/>
         <WordList
-          associatedWords={this.state.associatedWords}/>
+          associatedWords={this.state.associatedWords}
+          submitWord={this.submitWord}/>
         <Graph graphData={this.state.graphData}/>
       </div>
     );
