@@ -1,6 +1,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var request = require('superagent');
+require('./style.css');
+
 
 // TODO: remove test data
 var TEST_DATA = require('./testData.js');
@@ -8,6 +10,7 @@ var TEST_DATA = require('./testData.js');
 // Components
 var WordInput = require('./components/WordInput.js');
 var WordList = require('./components/WordList.js');
+var {AppBar} = require('material-ui');
 
 var {
   Node,
@@ -76,6 +79,9 @@ var App = React.createClass({
   render: function() {
     return (
       <div>
+      <AppBar
+        title="Brainado"
+        iconClassNameRight="muidocs-icon-navigation-expand-more"/>
         <WordInput
           submitWord={this.submitWord}/>
         <WordList
