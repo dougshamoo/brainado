@@ -1,4 +1,9 @@
 var React = require('react');
+var {RaisedButton} = require('material-ui');
+
+const style = {
+  margin: 4,
+};
 
 var WordList = React.createClass({
   getInitialState: function() {
@@ -16,7 +21,10 @@ var WordList = React.createClass({
   renderWords: function() {
     return this.state.associatedWords.map(function(word) {
       return (
-        <li key={word}>{word}</li>
+        <RaisedButton
+          id={word}
+          label={word}
+          style={style} />
       );
     });
   },
@@ -24,9 +32,7 @@ var WordList = React.createClass({
   render: function() {
     return (
       <div>
-        <ul>
-          {this.renderWords()}
-        </ul>
+        {this.renderWords()}
       </div>
     );
   },

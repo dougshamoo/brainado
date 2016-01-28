@@ -50,8 +50,8 @@ var NodeLabel = React.createClass({
 var Graph = React.createClass({
   // mixins: [Radium.StyleResolverMixin, Radium.BrowserStateMixin],
   getInitialState: function() {
-    var svgWidth = 900;
-    var svgHeight = 900;
+    var svgWidth = window.innerWidth * .8;
+    var svgHeight = window.innerHeight * .5;
     var force = d3.layout.force()
       .charge(-120)
       .linkDistance(function(d) {

@@ -1,9 +1,13 @@
 var React = require('react');
+var {
+  TextField,
+  RaisedButton,
+} = require('material-ui');
 
 var WordInput = React.createClass({
   getInitialState: function() {
     return {
-      value: 'Hello!',
+      value: '',
     };
   },
 
@@ -19,10 +23,15 @@ var WordInput = React.createClass({
   render: function() {
     return (
       <form onSubmit={this.handleSubmit.bind(this, this.state.value)}>
-        <input type="text"
+        <TextField
+          hintText="Pick a word to start with..."
+          floatingLabelText="Source word"
           value={this.state.value}
           onChange={this.handleChange} />
-        <input type="submit" value="Submit" />
+        <RaisedButton 
+          primary={true}
+          type="submit"
+          label="Submit" />
       </form>
     );
   },
