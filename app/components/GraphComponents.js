@@ -1,6 +1,7 @@
 var React = require('react');
 
 var color = d3.scale.category20();
+var linkScale = d3.scale.linear();
 
 var Node = React.createClass({
   render: function() {
@@ -50,14 +51,16 @@ var NodeLabel = React.createClass({
 var Graph = React.createClass({
   // mixins: [Radium.StyleResolverMixin, Radium.BrowserStateMixin],
   getInitialState: function() {
-    var svgWidth = window.innerWidth * .8;
-    var svgHeight = window.innerHeight * .5;
+    var svgWidth = this.props.vizWidth;
+    var svgHeight = this.props.vizHeight;
+
     var force = d3.layout.force()
-      .charge(-120)
+      .charge(-1500)
+      .gravity(.2)
       .linkDistance(function(d) {
         // Distance is inversely proportional to the association score,
         // multiplied by a scaling value to spread everything out.
-        return (1 / d.score) * 100;
+        return d.distance;
       })
       .size([svgWidth, svgHeight]);
 

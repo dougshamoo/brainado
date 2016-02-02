@@ -25,6 +25,8 @@ var App = React.createClass({
       sourceWord: '',
       associatedWords: [],
       graphData: {nodes: [], links:[]},
+      vizWidth: window.innerWidth * .8,
+      vizHeight: window.innerHeight * .5,
     };
   },
 
@@ -53,16 +55,31 @@ var App = React.createClass({
           // init new graph data object with source word
           var vizData = {nodes:[{name: word, group: 0}], links:[]};
 
+          // find min and max scores for new data
+          var minScore = Infinity;
+          var maxScore = -Infinity;
+          for (var key in associatedScores) {
+            if (associatedScores[key] > maxScore) maxScore = associatedScores[key];
+            if (associatedScores[key] < minScore) minScore = associatedScores[key];
+          }
+
+          // create d3 scale with min/max scores of graph data
+          var linkScale = d3.scale.linear()
+            .domain([minScore, maxScore])
+            .range([Math.min(self.state.vizWidth / 2, self.state.vizHeight / 2) - 200, 40]);
+
           // create a node and a link to source word for each associated word
           for (var i = 0; i < associatedWords.length; i++) {
             var node = {
               name: associatedWords[i],
               group: i + 1,
             };
+
             var link = {
               source: 0,
               target: i + 1,
               score: associatedScores[associatedWords[i]],
+              distance: linkScale(associatedScores[associatedWords[i]]),
             };
 
             vizData.nodes.push(node);
@@ -90,7 +107,10 @@ var App = React.createClass({
         <WordList
           associatedWords={this.state.associatedWords}
           submitWord={this.submitWord}/>
-        <Graph graphData={this.state.graphData}/>
+        <Graph
+          graphData={this.state.graphData}
+          vizWidth={this.state.vizWidth}
+          vizHeight={this.state.vizHeight}/>
       </div>
     );
   },
